@@ -35,9 +35,12 @@ cs_add_library(simple_coke_finder src/SimpleCokeFinder.cpp)
 # Executables: uncomment the following and edit arguments to compile new nodes
 # may add more of these lines for more nodes from the same package
 cs_add_executable(object_grabber_server src/object_grabber_as.cpp)
-cs_add_executable(object_grabber_client src/example_object_grabber_action_client.cpp)
+# cs_add_executable(object_grabber_client src/example_object_grabber_action_client.cpp)
 cs_add_executable(ork_grabber_client src/coke_grabber_action_client.cpp)
 cs_add_executable(moveit_grabber src/baxter_arm_test.cpp)
+
+cs_add_executable(ps9 src/ps9.cpp)
+
 #the following is required, if desire to link a node in this package with a library created in this same package
 # edit the arguments to reference the named node and named library within this package
 target_link_libraries(moveit_grabber baxter_arm baxter_gripper ${catkin_LIBRARIES})
