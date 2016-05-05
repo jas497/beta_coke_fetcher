@@ -16,13 +16,14 @@ std::string coke_id = "";
 double coke_confidence = 0;
 geometry_msgs::PoseStamped coke_pose;
 bool firstCB = false;
+int coke_num = 0;
 
 void objectCallback(const object_recognition_msgs::RecognizedObjectArray objects_msg) {
     double confident = 0;
     int id = -1;
     //ROS_WARN("Total %d objects found", (int)objects_msg.objects.size());
     //ROS_INFO("Frame_id 1: %s", objects_msg.header.frame_id.c_str());
-
+    coke_num = 0;
     if (firstCB == false && (int)objects_msg.objects.size() == 1) {
         coke_id.assign(objects_msg.objects[0].type.key.c_str());
         firstCB = true;
@@ -32,6 +33,7 @@ void objectCallback(const object_recognition_msgs::RecognizedObjectArray objects
             if (objects_msg.objects[i].confidence > confident) {
                 confident = objects_msg.objects[i].confidence;
                 id = i;
+                coke_num++;
             }
         }
     }
@@ -39,12 +41,12 @@ void objectCallback(const object_recognition_msgs::RecognizedObjectArray objects
         coke_pose.pose = objects_msg.objects[id].pose.pose.pose;
         coke_confidence = objects_msg.objects[id].confidence;
     } else {
-        confident = 0;
+        coke_confidence = 0;
     }
 }
 
 void planeCallback(const object_recognition_msgs::TableArray plane_msg) {
-    ROS_WARN("Total %d planes found", (int)plane_msg.tables.size());
+    //ROS_WARN("Total %d planes found", (int)plane_msg.tables.size());
     /*
 	  for (int i = 0; i < plane_msg.tables.size(); ++i) {
 	  ROS_INFO("Plane %d: plane pose x is: %f", i+1, plane_msg.tables[i].pose.position.x);
@@ -66,11 +68,13 @@ int main(int argc, char** argv) {
     geometry_msgs::PoseStamped transformed_pose;
     tf::TransformListener tf_listener; //start a transform listener
 
-    ros::Duration loop_timer(3.0);
+    ros::Duration loop_timer(1.0);
 
     while (ros::ok()) {
         if (coke_confidence > 0.8) {
 			ROS_WARN("COKE!!!");
+
+			ROS_WARN("Total %d cokes found", coke_num);
 			
 			ROS_INFO("Best Similarity = %f ", coke_confidence);
 			ROS_INFO("pose x is: %f", coke_pose.pose.position.x);

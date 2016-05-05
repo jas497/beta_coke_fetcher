@@ -1,0 +1,7 @@
+<launch>
+
+	<include file="$(find baxter_launch_files)/launch/yale_gripper_xform.launch"/>
+	<node name="detection" pkg="object_recognition_core" type="detection" args="-c $(find object_recognition_tabletop)/conf/detection.object.ros.ork" output="screen"/>
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find coke_grabber)/launch/object_recognition_kitchen.rviz"/>
+	<node pkg="coke_grabber" type="ps9" name="ps9"  output="screen"/> 
+</launch>
